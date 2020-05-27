@@ -25,7 +25,7 @@ def partition_to_units(partition):
 # Output: vectors corresponding to cosynchrony (synchrony-null) space 
 def partition_to_nulls(partition):
     u = partition_to_units(partition)
-    return u.T.nullspace()
+    return Matrix.hstack(*u.T.nullspace())
 
 # Input: Jacobian matrix
 # Output: Jacobian matrix symmetrized to have real eigenvalues
@@ -36,13 +36,14 @@ def symmetrize_jacobian(J):
 # Input: Collection of vectors (from partition_to_null or
 #     partition_to_unit) and
 #     Jacobian matrix
+# Output: Fibered Jacobian
 def reduce_jacobian(colvecs, J):
     new_J = colvecs.T*J*colvecs
     return new_J
 
-# Input: Jacobian matrix
+# Input: (Fibered) Jacobian matrix
 # Output: Set of expressions for Gershgorin discs 
-#     These must be negative for synchronization/cosynchronization
+#     These must all be negative for synchronization/cosynchronization
 def gershgorin_disc(J):
     sz = J.shape[0]
     new_J = zeros(sz, sz)
@@ -66,7 +67,10 @@ if __name__ == '__main__':
                 "a_1*(b_1*v_1 - u_1)",
                 "a_2*(b_2*v_2 - u_2)"])
     J = ODE_sys.jacobian(vars)
-    J_sym = symmetrize_jacobian(J)
-    J_reduced = reduce_jacobian(u,J)
-    
-print(gershgorin_disc(J_reduced))
+    J_reduced_u = reduce_jacobian(u,J)
+    J_sym_u = symmetrize_jacobian(J_reduced_u)
+    J_reduced_n = reduce_jacobian(n,J)
+    J_sym_n = symmetrize_jacobian(J_reduced_n)
+print("Synchronization conditions:", gershgorin_disc(J_sym_u))
+print("Cosynchronization conditions:", gershgorin_disc(J_sym_n))
+

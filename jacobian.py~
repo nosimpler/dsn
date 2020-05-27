@@ -52,7 +52,7 @@ def gershgorin_disc(J):
                 new_J[i,j] = abs(J[i,j])
             else:
                 new_J[i,i] = J[i,i]
-    return ones(1, sz)*new_J
+    return sp.ones(1, sz)*new_J
     
 
 if __name__ == '__main__':

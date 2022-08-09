@@ -40,5 +40,5 @@ if __name__ == '__main__':
                 "a_2*(b_2*v_2(t) - u_2(t))"])
     print(flow_curvature_matrix_fixed(lhs, rhs))
     print(flow_curvature_manifold_fixed(lhs, rhs))
-    print(flow_curvature_matrix(lhs, rhs))
+    print(flow_curvature_matrix(lhs, rhs)) 
       
